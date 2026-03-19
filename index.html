@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  />
   <title>Raspadinha Premiada</title>
   <style>
     * {
@@ -10,24 +13,24 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
     :root {
       --bg1: #070b2a;
       --bg2: #0a1036;
       --bg3: #1a0d2f;
       --gold: #f4c430;
-      --gold-soft: #ffd86b;
       --white: #f4f4f8;
       --muted: #b7bfd9;
-      --glass: rgba(255,255,255,0.08);
-      --glass-strong: rgba(255,255,255,0.12);
       --stroke: rgba(255,255,255,0.14);
-      --success: #19d27c;
-      --danger: #ff7a7a;
       --shadow: 0 20px 60px rgba(0,0,0,0.35);
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
       font-family: "Segoe UI", Arial, sans-serif;
       color: var(--white);
@@ -62,12 +65,8 @@
     }
 
     @keyframes floatDown {
-      from {
-        transform: translateY(-10vh) rotate(0deg);
-      }
-      to {
-        transform: translateY(110vh) rotate(540deg);
-      }
+      from { transform: translateY(-10vh) rotate(0deg); }
+      to { transform: translateY(110vh) rotate(540deg); }
     }
 
     .wrap {
@@ -174,7 +173,6 @@
       position: relative;
       min-height: 205px;
       border-radius: 28px;
-      padding: 0;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.12);
       background:
@@ -185,24 +183,11 @@
         inset 0 1px 0 rgba(255,255,255,0.07);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow:
-        0 20px 42px rgba(0,0,0,0.34),
-        0 0 24px rgba(255, 208, 74, 0.08),
-        inset 0 1px 0 rgba(255,255,255,0.10);
-    }
-
-    .card.locked {
-      opacity: 0.42;
-      filter: grayscale(0.25);
-    }
-
-    .card.used {
-      outline: 1px solid rgba(255,255,255,0.14);
+    .card.revealed {
+      outline: 1px solid rgba(255,255,255,0.16);
     }
 
     .card-header {
@@ -248,12 +233,12 @@
     }
 
     .content-inner {
-      max-width: 90%;
+      max-width: 92%;
     }
 
     .content h3 {
       margin: 0;
-      font-size: clamp(1.45rem, 2vw, 2rem);
+      font-size: clamp(1.4rem, 2vw, 1.95rem);
       font-weight: 900;
       line-height: 1.15;
       text-shadow: 0 3px 12px rgba(0,0,0,0.28);
@@ -283,26 +268,37 @@
       height: 100%;
       z-index: 2;
       cursor: pointer;
+      touch-action: none;
     }
 
-    .overlay-lock {
+    .card-done {
       position: absolute;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
+      left: 16px;
+      right: 16px;
+      bottom: 14px;
       z-index: 4;
-      background: rgba(6,10,30,0.56);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      font-weight: 800;
-      color: #eaf0ff;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: 0.25s ease;
     }
 
-    .card.locked .overlay-lock {
-      display: flex;
+    .card.revealed .card-done {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .done-pill {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #eef3ff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
     }
 
     .status-box {
@@ -329,8 +325,8 @@
         0 0 26px rgba(244,196,48,0.16);
     }
 
-    .status-box.lose {
-      border-color: rgba(255,255,255,0.12);
+    .status-box.done {
+      border-color: rgba(255,255,255,0.16);
     }
 
     .status-box h2 {
@@ -463,11 +459,12 @@
   <div class="wrap">
     <section class="topbar">
       <div class="hero">
-        <h1>Raspadinha • 1 Tentativa</h1>
+        <h1>Raspadinha • 6 Tentativas</h1>
         <p>
-          Você só pode raspar <strong>1 card</strong>. Em um deles existe o prêmio:
-          <strong>“Você ganhou um brinde”</strong>. Ao raspar uma vez, os demais
-          cards ficam bloqueados automaticamente.
+          Você vai raspar as <strong>6 raspadinhas</strong>. Nas primeiras 5 aparece
+          <strong>“Tente novamente... você está quase!”</strong> e
+          <strong>somente na última raspagem</strong> você ganha
+          <strong>um brinde</strong>.
         </p>
       </div>
 
@@ -475,7 +472,7 @@
         <div class="panel-card">
           <div class="panel-row">
             <small>Raspagens feitas</small>
-            <span id="attemptText">0 / 1</span>
+            <span id="attemptText">0 / 6</span>
           </div>
         </div>
 
@@ -493,9 +490,9 @@
 
     <section class="cards" id="cards"></section>
 
-    <section class="status-box" id="resultBox">
-      <h2 id="resultTitle"></h2>
-      <p id="resultText"></p>
+    <section class="status-box done" id="resultBox">
+      <h2 id="resultTitle">✨ Continue raspando</h2>
+      <p id="resultText">Revele todas as raspadinhas para chegar ao prêmio final.</p>
     </section>
   </div>
 
@@ -510,15 +507,11 @@
     const glowRing = document.getElementById("glowRing");
 
     const totalCards = 6;
-    let gameEnded = false;
-    let attemptsMade = 0;
+    let revealedCount = 0;
 
-    // sorteia aleatoriamente o card vencedor a cada vez que abrir o html
-    const winningCardIndex = Math.floor(Math.random() * totalCards);
-
-    const cardData = Array.from({ length: totalCards }, (_, i) => {
-      const isWin = i === winningCardIndex;
-      return isWin
+    const cardData = Array.from({ length: totalCards }, (_, index) => {
+      const isLastPrize = index === totalCards - 1;
+      return isLastPrize
         ? {
             title: "🎁 Você ganhou um brinde!",
             subtitle: "Parabéns! Tire um print e envie para validar ✅",
@@ -526,14 +519,14 @@
           }
         : {
             title: "😅 Tente novamente... você está quase!",
-            subtitle: "Essa tentativa não foi premiada.",
+            subtitle: "Continue raspando para chegar ao prêmio final.",
             type: "lose"
           };
     });
 
     function createParticles() {
       const container = document.getElementById("particles");
-      const total = window.innerWidth < 700 ? 50 : 90;
+      const total = window.innerWidth < 700 ? 45 : 80;
 
       for (let i = 0; i < total; i++) {
         const el = document.createElement("span");
@@ -550,8 +543,8 @@
     }
 
     function updateProgress() {
-      const percent = attemptsMade > 0 ? 100 : 0;
-      attemptText.textContent = `${attemptsMade} / 1`;
+      const percent = Math.round((revealedCount / totalCards) * 100);
+      attemptText.textContent = `${revealedCount} / ${totalCards}`;
       progressPercent.textContent = `${percent}%`;
       progressFill.style.width = percent + "%";
     }
@@ -559,7 +552,7 @@
     function launchConfetti() {
       const colors = ["#f4c430", "#ffd86b", "#ffffff", "#8fe8ff", "#ff7ad9"];
 
-      for (let i = 0; i < 170; i++) {
+      for (let i = 0; i < 150; i++) {
         const piece = document.createElement("span");
         piece.className = "confetti";
         piece.style.left = Math.random() * 100 + "vw";
@@ -581,46 +574,42 @@
       setTimeout(() => glowRing.classList.remove("active"), 1800);
     }
 
-    function endGame(selectedCard, won) {
-      gameEnded = true;
-      attemptsMade = 1;
-      updateProgress();
-
-      document.querySelectorAll(".card").forEach(card => {
-        if (card !== selectedCard) {
-          card.classList.add("locked");
-          card.querySelector("canvas").style.pointerEvents = "none";
-        } else {
-          card.classList.add("used");
-        }
-      });
-
+    function updateStatus(isWin) {
       resultBox.classList.add("show");
-      resultBox.classList.remove("win", "lose");
+      resultBox.classList.remove("win", "done");
 
-      if (won) {
+      if (isWin) {
         resultBox.classList.add("win");
         resultTitle.textContent = "🎉 Parabéns!";
         resultText.textContent = "Você ganhou um brinde. Tire um print e envie para validar seu prêmio.";
-        activateWinEffects(selectedCard);
+        return;
+      }
+
+      resultBox.classList.add("done");
+
+      const remaining = totalCards - revealedCount;
+
+      if (remaining > 0) {
+        resultTitle.textContent = "✨ Continue raspando";
+        resultText.textContent = `Você já revelou ${revealedCount} de ${totalCards}. Faltam ${remaining} raspadinha(s) para chegar ao prêmio final.`;
       } else {
-        resultBox.classList.add("lose");
-        resultTitle.textContent = "😅 Não foi dessa vez";
-        resultText.textContent = "Sua tentativa foi usada. Os outros cards agora estão bloqueados.";
+        resultTitle.textContent = "🎉 Parabéns!";
+        resultText.textContent = "Você revelou todas as raspadinhas e ganhou um brinde.";
       }
     }
 
-    function setupScratch(card, index, isWin) {
+    function setupScratch(card, isWin) {
       const canvas = card.querySelector("canvas");
       const box = card.querySelector(".scratch-box");
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
       let isDrawing = false;
       let revealed = false;
 
       function paintCover() {
         const rect = box.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
+        canvas.width = Math.max(1, Math.floor(rect.width));
+        canvas.height = Math.max(1, Math.floor(rect.height));
 
         const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
         gradient.addColorStop(0, "#6f6f77");
@@ -632,7 +621,7 @@
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        for (let i = 0; i < 170; i++) {
+        for (let i = 0; i < 140; i++) {
           ctx.beginPath();
           ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.18})`;
           ctx.arc(
@@ -646,27 +635,37 @@
         }
 
         const shine = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        shine.addColorStop(0, "rgba(255,255,255,0.00)");
+        shine.addColorStop(0, "rgba(255,255,255,0)");
         shine.addColorStop(0.35, "rgba(255,255,255,0.20)");
         shine.addColorStop(0.5, "rgba(255,255,255,0.08)");
-        shine.addColorStop(1, "rgba(255,255,255,0.00)");
+        shine.addColorStop(1, "rgba(255,255,255,0)");
         ctx.fillStyle = shine;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "rgba(255,255,255,0.96)";
         ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.font = "bold 22px Arial";
-        ctx.fillText("RASPE AQUI", canvas.width / 2, canvas.height / 2 + 8);
+        ctx.fillText("RASPE AQUI", canvas.width / 2, canvas.height / 2);
       }
 
       function getPos(e) {
         const rect = canvas.getBoundingClientRect();
+
         if (e.touches && e.touches.length > 0) {
           return {
             x: e.touches[0].clientX - rect.left,
             y: e.touches[0].clientY - rect.top
           };
         }
+
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          return {
+            x: e.changedTouches[0].clientX - rect.left,
+            y: e.changedTouches[0].clientY - rect.top
+          };
+        }
+
         return {
           x: e.clientX - rect.left,
           y: e.clientY - rect.top
@@ -680,8 +679,24 @@
         ctx.fill();
       }
 
+      function revealCard() {
+        if (revealed) return;
+        revealed = true;
+        card.classList.add("revealed");
+        canvas.style.pointerEvents = "none";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        revealedCount++;
+        updateProgress();
+        updateStatus(isWin);
+
+        if (isWin) {
+          activateWinEffects(card);
+        }
+      }
+
       function checkReveal() {
-        if (revealed || gameEnded) return;
+        if (revealed) return;
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         let transparentPixels = 0;
@@ -693,38 +708,37 @@
         const percent = transparentPixels / (canvas.width * canvas.height);
 
         if (percent > 0.28) {
-          revealed = true;
-          canvas.style.pointerEvents = "none";
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          endGame(card, isWin);
+          revealCard();
         }
       }
 
       canvas.addEventListener("mousedown", (e) => {
-        if (gameEnded || revealed) return;
+        if (revealed) return;
         isDrawing = true;
         const pos = getPos(e);
         scratch(pos.x, pos.y);
       });
 
       canvas.addEventListener("mousemove", (e) => {
-        if (!isDrawing || gameEnded || revealed) return;
+        if (!isDrawing || revealed) return;
         const pos = getPos(e);
         scratch(pos.x, pos.y);
       });
 
-      canvas.addEventListener("mouseup", () => {
+      window.addEventListener("mouseup", () => {
+        if (!isDrawing) return;
         isDrawing = false;
         checkReveal();
       });
 
       canvas.addEventListener("mouseleave", () => {
+        if (!isDrawing) return;
         isDrawing = false;
         checkReveal();
       });
 
       canvas.addEventListener("touchstart", (e) => {
-        if (gameEnded || revealed) return;
+        if (revealed) return;
         isDrawing = true;
         const pos = getPos(e);
         scratch(pos.x, pos.y);
@@ -732,19 +746,29 @@
       }, { passive: false });
 
       canvas.addEventListener("touchmove", (e) => {
-        if (!isDrawing || gameEnded || revealed) return;
+        if (!isDrawing || revealed) return;
         const pos = getPos(e);
         scratch(pos.x, pos.y);
         e.preventDefault();
       }, { passive: false });
 
-      canvas.addEventListener("touchend", () => {
+      canvas.addEventListener("touchend", (e) => {
+        if (!isDrawing) return;
         isDrawing = false;
         checkReveal();
-      });
+        e.preventDefault();
+      }, { passive: false });
+
+      canvas.addEventListener("touchcancel", () => {
+        isDrawing = false;
+        checkReveal();
+      }, { passive: false });
 
       paintCover();
       window.addEventListener("resize", paintCover);
+      window.addEventListener("orientationchange", () => {
+        setTimeout(paintCover, 200);
+      });
     }
 
     function buildCards() {
@@ -754,7 +778,7 @@
         card.innerHTML = `
           <div class="card-header">
             <span class="tag">Card ${index + 1}</span>
-            <span class="tag">${item.type === "win" ? "Prêmio" : "Tentativa"}</span>
+            <span class="tag">${item.type === "win" ? "Final" : "Tentativa"}</span>
           </div>
 
           <div class="scratch-box">
@@ -768,12 +792,12 @@
             <div class="shine-win"></div>
           </div>
 
-          <div class="overlay-lock">
-            🔒 Tentativa já utilizada
+          <div class="card-done">
+            <div class="done-pill">${item.type === "win" ? "🎁 Prêmio revelado" : "✅ Revelado"}</div>
           </div>
         `;
         cardsContainer.appendChild(card);
-        setupScratch(card, index, item.type === "win");
+        setupScratch(card, item.type === "win");
       });
     }
 
